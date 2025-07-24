@@ -38,6 +38,7 @@ const ncpiData = [
 ];
 
 let realWageData = new Array(labels.length).fill(0);
+let cumulativeIndex = new Array(labels.length).fill(1);
 
 // Initialize chart
 const ctx = document.getElementById('inflationChart').getContext('2d');
@@ -118,7 +119,7 @@ function initChart() {
                             }
                             if (context.parsed.y !== null) {
                                 if (context.datasetIndex === 2) {
-                                    label += 'Rs ' + context.parsed.y.toFixed(2);
+                                    label += 'Rs ' + context.parsed.y.toLocaleString('en-US', {maximumFractionDigits: 2});
                                 } else {
                                     label += context.parsed.y.toFixed(1) + '%';
                                 }
@@ -200,18 +201,35 @@ function updateSavingsProjections(currentSalary, savingsPercentage, expectedRetu
     const withReturns5Years = calculateFutureValue(monthlySavings, expectedReturn, 5);
     const withReturns10Years = calculateFutureValue(monthlySavings, expectedReturn, 10);
     
+    // Format numbers for display
+    const formatCurrency = value => value.toLocaleString('en-US', {maximumFractionDigits: 0});
+    
     // Update the savings cards
-    document.querySelectorAll('.savings-value')[0].textContent = `Rs ${withReturns1Year.toLocaleString('en-US', {maximumFractionDigits: 0})}`;
-    document.querySelectorAll('.savings-detail')[0].textContent = `Total saved: Rs ${totalSaved1Year.toLocaleString('en-US', {maximumFractionDigits: 0})}`;
-    document.querySelectorAll('.savings-detail')[1].textContent = `With returns: Rs ${withReturns1Year.toLocaleString('en-US', {maximumFractionDigits: 0})}`;
+    const savingsValues = document.querySelectorAll('.savings-value');
+    const savingsDetails = document.querySelectorAll('.savings-detail');
     
-    document.querySelectorAll('.savings-value')[1].textContent = `Rs ${withReturns5Years.toLocaleString('en-US', {maximumFractionDigits: 0})}`;
-    document.querySelectorAll('.savings-detail')[2].textContent = `Total saved: Rs ${totalSaved5Years.toLocaleString('en-US', {maximumFractionDigits: 0})}`;
-    document.querySelectorAll('.savings-detail')[3].textContent = `With returns: Rs ${withReturns5Years.toLocaleString('en-US', {maximumFractionDigits: 0})}`;
+    savingsValues[0].textContent = `Rs ${formatCurrency(withReturns1Year)}`;
+    savingsDetails[0].textContent = `Total saved: Rs ${formatCurrency(totalSaved1Year)}`;
+    savingsDetails[1].textContent = `With returns: Rs ${formatCurrency(withReturns1Year)}`;
     
-    document.querySelectorAll('.savings-value')[2].textContent = `Rs ${withReturns10Years.toLocaleString('en-US', {maximumFractionDigits: 0})}`;
-    document.querySelectorAll('.savings-detail')[4].textContent = `Total saved: Rs ${totalSaved10Years.toLocaleString('en-US', {maximumFractionDigits: 0})}`;
-    document.querySelectorAll('.savings-detail')[5].textContent = `With returns: Rs ${withReturns10Years.toLocaleString('en-US', {maximumFractionDigits: 0})}`;
+    savingsValues[1].textContent = `Rs ${formatCurrency(withReturns5Years)}`;
+    savingsDetails[2].textContent = `Total saved: Rs ${formatCurrency(totalSaved5Years)}`;
+    savingsDetails[3].textContent = `With returns: Rs ${formatCurrency(withReturns5Years)}`;
+    
+    savingsValues[2].textContent = `Rs ${formatCurrency(withReturns10Years)}`;
+    savingsDetails[4].textContent = `Total saved: Rs ${formatCurrency(totalSaved10Years)}`;
+    savingsDetails[5].textContent = `With returns: Rs ${formatCurrency(withReturns10Years)}`;
+}
+
+// Calculate cumulative price index
+function calculateCumulativeIndex() {
+    // Start with base index of 100 for Jan 2022
+    cumulativeIndex[0] = 100;
+    
+    for (let i = 1; i < ccpiData.length; i++) {
+        // Calculate current price index based on previous month and inflation
+        cumulativeIndex[i] = cumulativeIndex[i - 1] * (1 + ccpiData[i] / 100);
+    }
 }
 
 // Real wage calculation
@@ -221,30 +239,37 @@ function calculateRealWage() {
     const savingsPercentage = parseFloat(document.getElementById('savings-percentage').value);
     const expectedReturn = parseFloat(document.getElementById('expected-return').value);
     
-    if (!janSalary || !currentSalary || isNaN(savingsPercentage) {
+    if (isNaN(janSalary) || isNaN(currentSalary) || isNaN(savingsPercentage) || isNaN(expectedReturn)) {
         alert('Please enter all required fields.');
         return;
     }
     
-    // Calculate cumulative inflation adjustment
-    let cumulativeFactor = 1;
-    realWageData = ccpiData.map((inflation, index) => {
-        // Adjust for inflation each month
-        cumulativeFactor *= (1 - inflation / 100);
-        
-        // Calculate real wage value for each month
-        return currentSalary * cumulativeFactor;
+    // Calculate cumulative price index
+    calculateCumulativeIndex();
+    
+    // Calculate real wage for each month
+    realWageData = cumulativeIndex.map((indexValue, idx) => {
+        // Adjust current salary to base period (Jan 2022) purchasing power
+        return (currentSalary * cumulativeIndex[0]) / indexValue;
     });
     
     // Update chart data
     inflationChart.data.datasets[2].data = realWageData;
     inflationChart.update();
     
+    // Calculate wage change percentage
+    const lastRealWage = realWageData[realWageData.length - 1];
+    const wageChange = ((lastRealWage - janSalary) / janSalary * 100).toFixed(1);
+    const isPositive = parseFloat(wageChange) >= 0;
+    
     // Update summary
-    const wageChange = ((realWageData[realWageData.length - 1] - janSalary) / janSalary * 100).toFixed(1);
-    document.querySelector('.summary-card .value').textContent = `${wageChange}%`;
-    document.querySelector('.change').className = `change ${wageChange >= 0 ? 'positive' : 'negative'}`;
-    document.querySelector('.change').textContent = `${wageChange >= 0 ? '↑' : '↓'} since Jan 2022`;
+    document.getElementById('wage-value').textContent = `${isPositive ? '+' : ''}${wageChange}%`;
+    document.getElementById('wage-change').className = `change ${isPositive ? 'positive' : 'negative'}`;
+    document.getElementById('wage-change').textContent = `${isPositive ? '↑' : '↓'} since Jan 2022`;
+    
+    // Update inflation trend text
+    document.getElementById('wage-trend').textContent = 
+        `Real wages have ${isPositive ? 'increased' : 'decreased'} by ${Math.abs(wageChange)}% since Jan 2022 with your current salary`;
     
     // Update savings projections
     updateSavingsProjections(currentSalary, savingsPercentage, expectedReturn);
@@ -273,6 +298,7 @@ function setupTabs() {
 document.addEventListener('DOMContentLoaded', function() {
     initChart();
     setupTabs();
+    calculateCumulativeIndex();
     
     // Set up calculate button
     document.getElementById('calculate-btn').addEventListener('click', calculateRealWage);
