@@ -205,6 +205,11 @@ body {
     display: block;
 }
 
+.tab-list {
+    margin-top: 10px;
+    padding-left: 20px;
+}
+
 /* Savings Plan Styles */
 .savings-plan {
     margin-top: 10px;
@@ -337,5 +342,10 @@ footer h3 {
     
     .savings-cards {
         grid-template-columns: 1fr;
+    }
+    
+    .tab {
+        padding: 8px 12px;
+        font-size: 0.9rem;
     }
 }
