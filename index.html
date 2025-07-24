@@ -7,56 +7,159 @@
     <meta name="description" content="Visualize monthly inflation trends and compare your real wage adjusted for inflation using the Colombo Consumer Price Index (CCPI) and National Consumer Price Index (NCPI).">
     <meta name="keywords" content="Inflation, Wage Comparison, Inflation Calculator, CCPI, NCPI, Sri Lanka, Inflation Trends, Data Visualization">
     <meta name="author" content="Chatura Dissanayake">
-    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="styles.css">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/luxon@3.4.4/build/global/luxon.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chartjs-adapter-luxon@1.3.1"></script>
 </head>
 <body>
     <div class="container">
-        <!-- Header Section -->
-        <header class="header">
-            <h1>Inflation Data Visualization</h1>
-            <p>Track monthly inflation trends and wage comparisons at a glance.</p>
-        </header>
-
-        <!-- Input Boxes Card -->
-        <div class="card">
-            <div class="input-group">
-                <label for="jan-salary">Your Salary in January 2022</label>
-                <input type="number" id="jan-salary" placeholder="Enter your gross salary for January 2022 (in Rs)" min="0">
+        <!-- Left Panel: Controls and Summary -->
+        <div class="panel">
+            <div class="panel-header">
+                <h1>Inflation Data Visualization</h1>
+                <p>Track monthly inflation trends and wage comparisons at a glance</p>
             </div>
-            <div class="input-group">
-                <label for="current-salary">Your Salary Now</label>
-                <input type="number" id="current-salary" placeholder="Enter your current gross monthly salary (in Rs)" min="0">
+            
+            <div class="input-card">
+                <div class="input-group">
+                    <label for="jan-salary">Your Salary in January 2022 (Rs)</label>
+                    <input type="number" id="jan-salary" placeholder="e.g., 100000" min="0" value="100000">
+                </div>
+                
+                <div class="input-group">
+                    <label for="current-salary">Your Current Salary (Rs)</label>
+                    <input type="number" id="current-salary" placeholder="e.g., 150000" min="0" value="150000">
+                </div>
+                
+                <div class="input-group">
+                    <label for="savings-percentage">Monthly Savings Percentage (%)</label>
+                    <input type="number" id="savings-percentage" placeholder="e.g., 20" min="0" max="100" value="20">
+                </div>
+                
+                <div class="input-group">
+                    <label for="expected-return">Expected Annual Return on Savings (%)</label>
+                    <input type="number" id="expected-return" placeholder="e.g., 8" min="0" value="8">
+                </div>
+                
+                <button id="calculate-btn" class="btn-calculate">Calculate Real Wage & Savings</button>
+            </div>
+            
+            <div class="summary-cards">
+                <div class="summary-card">
+                    <h3>Current CCPI Inflation</h3>
+                    <div class="value">-0.6%</div>
+                    <div class="change negative">↓ 0.1% from last month</div>
+                </div>
+                
+                <div class="summary-card">
+                    <h3>Current NCPI Inflation</h3>
+                    <div class="value">0.3%</div>
+                    <div class="change negative">↓ 0.3% from last month</div>
+                </div>
+                
+                <div class="summary-card">
+                    <h3>Real Wage Change</h3>
+                    <div class="value">+12.4%</div>
+                    <div class="change positive">↑ since Jan 2022</div>
+                </div>
+            </div>
+            
+            <div class="tab-container">
+                <div class="tabs">
+                    <div class="tab active" data-tab="inflation">Inflation Trends</div>
+                    <div class="tab" data-tab="breakdown">Category Breakdown</div>
+                    <div class="tab" data-tab="savings">Savings Plan</div>
+                </div>
+                
+                <div class="tab-content active" id="inflation-tab">
+                    <p>Inflation in Sri Lanka has seen significant fluctuations over the past 3 years:</p>
+                    <ul style="margin-top: 10px; padding-left: 20px;">
+                        <li>Peak inflation reached 69.8% in Sep 2022 (CCPI)</li>
+                        <li>Current inflation is -0.6% (CCPI) as of June 2025</li>
+                        <li>Real wages have increased by 12.4% since Jan 2022 with your current salary</li>
+                    </ul>
+                </div>
+                
+                <div class="tab-content" id="breakdown-tab">
+                    <p>Key inflation drivers (June 2025):</p>
+                    <ul style="margin-top: 10px; padding-left: 20px;">
+                        <li>Food & Beverages: -2.1%</li>
+                        <li>Housing & Utilities: +1.8%</li>
+                        <li>Transportation: -3.2%</li>
+                        <li>Healthcare: +2.5%</li>
+                        <li>Education: +4.1%</li>
+                    </ul>
+                </div>
+                
+                <div class="tab-content" id="savings-tab">
+                    <div class="savings-plan">
+                        <h3>Projected Savings Growth</h3>
+                        <div class="savings-cards">
+                            <div class="savings-card">
+                                <h4>1 Year</h4>
+                                <div class="savings-value">Rs 360,000</div>
+                                <div class="savings-detail">Total saved: Rs 360,000</div>
+                                <div class="savings-detail">With returns: Rs 374,400</div>
+                            </div>
+                            <div class="savings-card">
+                                <h4>5 Years</h4>
+                                <div class="savings-value">Rs 1,800,000</div>
+                                <div class="savings-detail">Total saved: Rs 1,800,000</div>
+                                <div class="savings-detail">With returns: Rs 2,319,391</div>
+                            </div>
+                            <div class="savings-card">
+                                <h4>10 Years</h4>
+                                <div class="savings-value">Rs 3,600,000</div>
+                                <div class="savings-detail">Total saved: Rs 3,600,000</div>
+                                <div class="savings-detail">With returns: Rs 5,794,123</div>
+                            </div>
+                        </div>
+                        <p class="savings-note">Assumes consistent monthly savings and annual compounding at the specified rate.</p>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="source-note">
+                <p>Source: Central Bank of Sri Lanka, Department of Census & Statistics (Updated: July 2025)</p>
             </div>
         </div>
-<br>
-        <!-- Calculate Button -->
-        <div class="button-container">
-            <button id="calculate-btn">Calculate</button>
-        </div>
-
-        <!-- Chart Canvas -->
-        <div class="chart-container">
-            <canvas id="myComboChart" width="800" height="400"></canvas>
-        </div>
-
-        <!-- Source Note -->
-        <div class="source-note">
-            <p><em>Source: This calculator uses the Colombo Consumer Price Index and excludes recent tax increases.</em></p>
+        
+        <!-- Right Panel: Chart -->
+        <div class="panel">
+            <div class="chart-container">
+                <canvas id="inflationChart"></canvas>
+            </div>
         </div>
     </div>
-
-    <!-- Footer Section -->
-    <footer class="footer">
-        <div class="legal">
-            <p>&copy; 2024 Inflation Data Visualization. All rights reserved.</p>
-        </div>
-        <div class="designed-by">
-            <p>Designed by Chatura Dissanayake | consultchatura@gmail.com</p>
+    
+    <footer>
+        <div class="footer-content">
+            <div class="footer-section">
+                <h3>Inflation Data Visualization</h3>
+                <p>Tracking economic trends in Sri Lanka</p>
+            </div>
+            
+            <div class="footer-section">
+                <h3>Data Sources</h3>
+                <p>Central Bank of Sri Lanka<br>Department of Census & Statistics</p>
+            </div>
+            
+            <div class="footer-section">
+                <h3>Connect</h3>
+                <div class="footer-links">
+                    <a href="#">Twitter</a>
+                    <a href="#">LinkedIn</a>
+                    <a href="#">GitHub</a>
+                </div>
+            </div>
+            
+            <div class="copyright">
+                <p>&copy; 2024 Inflation Data Visualization. All rights reserved. | Designed by Chatura Dissanayake</p>
+            </div>
         </div>
     </footer>
-
-    <!-- Link to External JavaScript File -->
+    
     <script src="script.js"></script>
 </body>
 </html>
