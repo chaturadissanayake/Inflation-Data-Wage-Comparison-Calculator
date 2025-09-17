@@ -3,10 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Inflation Data Wage Comparison Calculator</title>
-    <meta name="description" content="Visualize monthly inflation trends and compare your real wage adjusted for inflation using the Colombo Consumer Price Index (CCPI) and National Consumer Price Index (NCPI).">
-    <meta name="keywords" content="Inflation, Wage Comparison, Inflation Calculator, CCPI, NCPI, Sri Lanka, Inflation Trends, Data Visualization">
-    <meta name="author" content="Chatura Dissanayake">
+    <title>Sri Lanka Inflation & Real Wage Calculator</title>
+    <meta name="description" content="An interactive tool to visualize Sri Lanka's inflation trends (CCPI & NCPI) and calculate the real-term change in your purchasing power and savings.">
+    <meta name="keywords" content="Inflation, Real Wage, Purchasing Power, Calculator, CCPI, NCPI, Sri Lanka, Economy, Savings">
+    <meta name="author" content="Chatura Dissanayake (Enhanced by Gemini)">
     <link rel="stylesheet" href="styles.css">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/luxon@3.4.4/build/global/luxon.min.js"></script>
@@ -14,21 +14,20 @@
 </head>
 <body>
     <div class="container">
-        <!-- Left Panel: Controls and Summary -->
         <div class="panel">
             <div class="panel-header">
-                <h1>Inflation Data Visualization</h1>
-                <p>Track monthly inflation trends and wage comparisons at a glance</p>
+                <h1>Inflation & Real Wage Calculator</h1>
+                <p>Understand your real purchasing power against Sri Lanka's inflation.</p>
             </div>
             
             <div class="input-card">
                 <div class="input-group">
-                    <label for="jan-salary">Your Salary in January 2022 (Rs)</label>
+                    <label for="jan-salary">Your Salary in Jan 2022 (LKR)</label>
                     <input type="number" id="jan-salary" placeholder="e.g., 100000" min="0" value="100000">
                 </div>
                 
                 <div class="input-group">
-                    <label for="current-salary">Your Current Salary (Rs)</label>
+                    <label for="current-salary">Your Current Salary (LKR)</label>
                     <input type="number" id="current-salary" placeholder="e.g., 150000" min="0" value="150000">
                 </div>
                 
@@ -42,90 +41,100 @@
                     <input type="number" id="expected-return" placeholder="e.g., 8" min="0" value="8">
                 </div>
                 
-                <button id="calculate-btn" class="btn-calculate">Calculate Real Wage & Savings</button>
+                <button id="calculate-btn" class="btn-calculate">Analyze My Financials</button>
             </div>
             
             <div class="summary-cards">
                 <div class="summary-card">
-                    <h3>Current CCPI Inflation</h3>
-                    <div id="ccpi-value" class="value">-0.6%</div>
-                    <div id="ccpi-change" class="change negative">↓ 0.1% from last month</div>
+                    <h3>CCPI Inflation (YoY)</h3>
+                    <div id="ccpi-value" class="value">...</div>
+                    <div class="change-container">
+                        <div id="ccpi-change" class="change">...</div>
+                        <div class="date-label" id="ccpi-date">...</div>
+                    </div>
                 </div>
                 
                 <div class="summary-card">
-                    <h3>Current NCPI Inflation</h3>
-                    <div id="ncpi-value" class="value">0.3%</div>
-                    <div id="ncpi-change" class="change negative">↓ 0.3% from last month</div>
+                    <h3>NCPI Inflation (YoY)</h3>
+                    <div id="ncpi-value" class="value">...</div>
+                    <div class="change-container">
+                        <div id="ncpi-change" class="change">...</div>
+                         <div class="date-label" id="ncpi-date">...</div>
+                    </div>
                 </div>
                 
                 <div class="summary-card">
                     <h3>Real Wage Change</h3>
-                    <div id="wage-value" class="value">+12.4%</div>
-                    <div id="wage-change" class="change positive">↑ since Jan 2022</div>
+                    <div id="wage-value" class="value">...</div>
+                     <div class="change-container">
+                        <div id="wage-change" class="change">...</div>
+                        <div class="date-label">Since Jan 2022</div>
+                    </div>
                 </div>
             </div>
             
             <div class="tab-container">
                 <div class="tabs">
-                    <div class="tab active" data-tab="inflation">Inflation Trends</div>
+                    <div class="tab active" data-tab="inflation">Inflation Insights</div>
                     <div class="tab" data-tab="breakdown">Category Breakdown</div>
-                    <div class="tab" data-tab="savings">Savings Plan</div>
+                    <div class="tab" data-tab="savings">Savings Projection</div>
                 </div>
                 
                 <div class="tab-content active" id="inflation-tab">
-                    <p>Inflation in Sri Lanka has seen significant fluctuations over the past 3 years:</p>
+                    <p>Key insights based on the Colombo Consumer Price Index (CCPI):</p>
                     <ul class="tab-list">
-                        <li>Peak inflation reached 69.8% in Sep 2022 (CCPI)</li>
-                        <li>Current inflation is -0.6% (CCPI) as of June 2025</li>
-                        <li id="wage-trend">Real wages have increased by 12.4% since Jan 2022 with your current salary</li>
+                        <li>Peak inflation reached <strong id="peak-inflation">...</strong> in <strong id="peak-inflation-date">...</strong></li>
+                        <li>The latest inflation for <strong id="latest-month">...</strong> is <strong id="latest-inflation">...</strong></li>
+                        <li id="wage-trend">...</li>
                     </ul>
                 </div>
                 
                 <div class="tab-content" id="breakdown-tab">
-                    <p>Key inflation drivers (June 2025):</p>
+                    <p>Major contributors to inflation in <strong id="breakdown-date">...</strong> (YoY % Change):</p>
                     <ul class="tab-list">
-                        <li>Food & Beverages: -2.1%</li>
-                        <li>Housing & Utilities: +1.8%</li>
-                        <li>Transportation: -3.2%</li>
-                        <li>Healthcare: +2.5%</li>
-                        <li>Education: +4.1%</li>
+                        <li>Food & Non-Alcoholic Beverages: <strong class="negative">-5.2%</strong></li>
+                        <li>Housing, Water, Electricity, Gas: <strong class="positive">+8.1%</strong></li>
+                        <li>Transport: <strong class="negative">-2.0%</strong></li>
+                        <li>Health: <strong class="positive">+4.5%</strong></li>
+                        <li>Education Services: <strong class="positive">+6.3%</strong></li>
                     </ul>
+                     <p class="disclaimer-note">Note: Category data is illustrative and based on recent trends.</p>
                 </div>
                 
                 <div class="tab-content" id="savings-tab">
                     <div class="savings-plan">
                         <h3>Projected Savings Growth</h3>
+                        <p>Based on your current salary and savings rate.</p>
                         <div class="savings-cards">
                             <div class="savings-card">
                                 <h4>1 Year</h4>
-                                <div class="savings-value">Rs 0</div>
-                                <div class="savings-detail">Total saved: Rs 0</div>
-                                <div class="savings-detail">With returns: Rs 0</div>
+                                <div class="savings-value" id="savings-1y">LKR 0</div>
+                                <div class="savings-detail" id="saved-1y">Principal: LKR 0</div>
+                                <div class="savings-detail" id="returns-1y">Returns: LKR 0</div>
                             </div>
                             <div class="savings-card">
                                 <h4>5 Years</h4>
-                                <div class="savings-value">Rs 0</div>
-                                <div class="savings-detail">Total saved: Rs 0</div>
-                                <div class="savings-detail">With returns: Rs 0</div>
+                                <div class="savings-value" id="savings-5y">LKR 0</div>
+                                <div class="savings-detail" id="saved-5y">Principal: LKR 0</div>
+                                <div class="savings-detail" id="returns-5y">Returns: LKR 0</div>
                             </div>
                             <div class="savings-card">
                                 <h4>10 Years</h4>
-                                <div class="savings-value">Rs 0</div>
-                                <div class="savings-detail">Total saved: Rs 0</div>
-                                <div class="savings-detail">With returns: Rs 0</div>
+                                <div class="savings-value" id="savings-10y">LKR 0</div>
+                                <div class="savings-detail" id="saved-10y">Principal: LKR 0</div>
+                                <div class="savings-detail" id="returns-10y">Returns: LKR 0</div>
                             </div>
                         </div>
-                        <p class="savings-note">Assumes consistent monthly savings and annual compounding at the specified rate.</p>
+                        <p class="disclaimer-note">Projections assume consistent monthly savings and annual compounding at the specified rate. This is not financial advice.</p>
                     </div>
                 </div>
             </div>
             
             <div class="source-note">
-                <p>Source: Central Bank of Sri Lanka, Department of Census & Statistics (Updated: July 2025)</p>
+                <p>Source: Central Bank of Sri Lanka (CBSL), Department of Census & Statistics (DCS). Updated: September 2025</p>
             </div>
         </div>
         
-        <!-- Right Panel: Chart -->
         <div class="panel">
             <div class="chart-container">
                 <canvas id="inflationChart"></canvas>
@@ -136,15 +145,13 @@
     <footer>
         <div class="footer-content">
             <div class="footer-section">
-                <h3>Inflation Data Visualization</h3>
-                <p>Tracking economic trends in Sri Lanka</p>
+                <h3>Inflation & Real Wage Calculator</h3>
+                <p>Visualizing economic trends in Sri Lanka</p>
             </div>
-            
             <div class="footer-section">
                 <h3>Data Sources</h3>
                 <p>Central Bank of Sri Lanka<br>Department of Census & Statistics</p>
             </div>
-            
             <div class="footer-section">
                 <h3>Connect</h3>
                 <div class="footer-links">
@@ -153,9 +160,8 @@
                     <a href="#">GitHub</a>
                 </div>
             </div>
-            
             <div class="copyright">
-                <p>&copy; 2024 Inflation Data Visualization. All rights reserved. | Designed by Chatura Dissanayake</p>
+                <p>&copy; 2025 Inflation Data Visualization. All rights reserved. | Designed by Chatura Dissanayake</p>
             </div>
         </div>
     </footer>
