@@ -187,7 +187,7 @@ document.addEventListener('DOMContentLoaded', () => {
             bodyColor: getVar('--text') || '#111827',
             borderColor: getVar('--muted') || '#e5e7eb',
             borderWidth: 1,
-            padding: 10,
+            padding: 12,
             callbacks: {
               label: (ctx) => {
                 const label = ctx.dataset.label || '';
@@ -210,7 +210,10 @@ document.addEventListener('DOMContentLoaded', () => {
               maxRotation: 45, 
               autoSkip: true, 
               maxTicksLimit: 12,
-              color: getVar('--text') || '#1e293b'
+              color: getVar('--text') || '#1e293b',
+              font: {
+                size: 12
+              }
             } 
           },
           y: {
@@ -219,13 +222,20 @@ document.addEventListener('DOMContentLoaded', () => {
             title: { 
               display: true, 
               text: 'Inflation Rate (%)',
-              color: getVar('--text') || '#1e293b'
+              color: getVar('--text') || '#1e293b',
+              font: {
+                size: 14,
+                weight: 'bold'
+              }
             },
             grid: { 
               color: 'rgba(200,200,200,0.2)' 
             },
             ticks: {
-              color: getVar('--text') || '#1e293b'
+              color: getVar('--text') || '#1e293b',
+              font: {
+                size: 12
+              }
             }
           },
           y1: {
@@ -234,13 +244,28 @@ document.addEventListener('DOMContentLoaded', () => {
             title: { 
               display: true, 
               text: 'Real Purchasing Power (LKR)',
-              color: getVar('--text') || '#1e293b'
+              color: getVar('--text') || '#1e293b',
+              font: {
+                size: 14,
+                weight: 'bold'
+              }
             },
             grid: { 
               drawOnChartArea: false 
             },
             ticks: {
-              color: getVar('--text') || '#1e293b'
+              color: getVar('--text') || '#1e293b',
+              font: {
+                size: 12
+              },
+              callback: function(value) {
+                if (value >= 1000000) {
+                  return 'LKR ' + (value/1000000).toFixed(1) + 'M';
+                } else if (value >= 1000) {
+                  return 'LKR ' + (value/1000).toFixed(0) + 'K';
+                }
+                return 'LKR ' + value;
+              }
             }
           }
         },
@@ -264,8 +289,9 @@ document.addEventListener('DOMContentLoaded', () => {
     const minPP = Math.min(...purchasingPowerData.filter(v => v > 0));
     const maxPP = Math.max(...purchasingPowerData);
     if (isFinite(minPP) && isFinite(maxPP)) {
-      y1.min = Math.floor(minPP * 0.85);
-      y1.max = Math.ceil(maxPP * 1.05);
+      // Improved scaling for purchasing power
+      y1.min = Math.max(0, Math.floor(minPP * 0.9));
+      y1.max = Math.ceil(maxPP * 1.1);
     }
     inflationChart.update();
   }
@@ -336,6 +362,10 @@ document.addEventListener('DOMContentLoaded', () => {
         plugins: { 
           legend: { display: false },
           tooltip: {
+            backgroundColor: getVar('--card') || '#fff',
+            titleColor: getVar('--text') || '#111827',
+            bodyColor: getVar('--text') || '#111827',
+            borderColor: getVar('--muted') || '#e5e7eb',
             callbacks: {
               label: (ctx) => {
                 return `Savings: LKR ${Math.round(ctx.parsed.y).toLocaleString('en-US')}`;
@@ -347,12 +377,19 @@ document.addEventListener('DOMContentLoaded', () => {
           x: {
             grid: {
               display: false
+            },
+            ticks: {
+              color: getVar('--text') || '#1e293b'
             }
           },
           y: {
             beginAtZero: true,
             ticks: {
-              callback: (v) => 'LKR ' + (v >= 1000 ? (v/1000).toFixed(0) + 'k' : v)
+              color: getVar('--text') || '#1e293b',
+              callback: (v) => 'LKR ' + (v >= 1000000 ? (v/1000000).toFixed(1) + 'M' : v >= 1000 ? (v/1000).toFixed(0) + 'k' : v)
+            },
+            grid: {
+              color: 'rgba(200,200,200,0.2)'
             }
           }
         }
