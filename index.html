@@ -15,24 +15,25 @@
   <header class="app-header">
     <div class="brand">
       <h1>Inflation & Real Wage Calculator</h1>
-      <p>Understand your purchasing power against Sri Lanka’s inflation.</p>
+      <p>Understand your purchasing power against Sri Lanka's inflation.</p>
     </div>
 
-    <!-- Theme toggle -->
-    <div class="theme-toggle">
-      <!-- [ux-improve] Keep existing checkbox, add accessible label + icons -->
-      <input type="checkbox" id="theme-switch" aria-label="Toggle dark mode" />
-      <label for="theme-switch" class="toggle" role="switch" aria-live="polite" aria-checked="false">
-        <span class="toggle-icon" aria-hidden="true">
-          <!-- Sun & Moon (inline SVGs to avoid extra deps) -->
-          <svg class="icon-sun" viewBox="0 0 24 24" aria-hidden="true"><path d="M6.76 4.84l-1.8-1.79-1.41 1.41 1.79 1.8 1.42-1.42zm10.48 14.32l1.79 1.8 1.41-1.41-1.8-1.79-1.4 1.4zM12 4V1h-0v3h0zm0 19v-3h0v3h0zM4 12H1v0h3v0zm19 0h-3v0h3v0zM6.76 19.16l-1.79 1.8 1.41 1.41 1.8-1.79-1.42-1.42zM19.16 6.76l1.8-1.79-1.41-1.41-1.8 1.79 1.41 1.41zM12 7a5 5 0 100 10 5 5 0 000-10z"/></svg>
-          <svg class="icon-moon" viewBox="0 0 24 24" aria-hidden="true"><path d="M21 12.79A9 9 0 1111.21 3a7 7 0 109.79 9.79z"/></svg>
-        </span>
-        <span class="toggle-knob" aria-hidden="true"></span>
-        <span class="toggle-labels" aria-hidden="true">
-          <span>Light</span><span>Dark</span>
-        </span>
-      </label>
+    <!-- Theme toggle - Moved to more prominent position -->
+    <div class="theme-toggle-container">
+      <span class="theme-label">Theme:</span>
+      <div class="theme-toggle">
+        <input type="checkbox" id="theme-switch" aria-label="Toggle dark mode" />
+        <label for="theme-switch" class="toggle" role="switch" aria-live="polite" aria-checked="false">
+          <span class="toggle-icon" aria-hidden="true">
+            <svg class="icon-sun" viewBox="0 0 24 24" aria-hidden="true"><path d="M6.76 4.84l-1.8-1.79-1.41 1.41 1.79 1.8 1.42-1.42zm10.48 14.32l1.79 1.8 1.41-1.41-1.8-1.79-1.4 1.4zM12 4V1h-0v3h0zm0 19v-3h0v3h0zM4 12H1v0h3v0zm19 0h-3v0h3v0zM6.76 19.16l-1.79 1.8 1.41 1.41 1.8-1.79-1.42-1.42zM19.16 6.76l1.8-1.79-1.41-1.41-1.8 1.79 1.41 1.41zM12 7a5 5 0 100 10 5 5 0 000-10z"/></svg>
+            <svg class="icon-moon" viewBox="0 0 24 24" aria-hidden="true"><path d="M21 12.79A9 9 0 1111.21 3a7 7 0 109.79 9.79z"/></svg>
+          </span>
+          <span class="toggle-knob" aria-hidden="true"></span>
+          <span class="toggle-labels" aria-hidden="true">
+            <span>Light</span><span>Dark</span>
+          </span>
+        </label>
+      </div>
     </div>
   </header>
 
@@ -47,14 +48,14 @@
       <div class="input-card" role="form" aria-labelledby="form-title">
         <div class="input-group">
           <label for="jan-salary">Your Salary in Jan 2022 (LKR)</label>
-          <input type="number" id="jan-salary" placeholder="e.g., 100000 (gross or net?)" min="0" value="100000" />
+          <input type="number" id="jan-salary" placeholder="e.g., 100000" min="0" value="100000" />
           <div class="hint" id="hint-jan-salary">Tip: Use the same basis (gross or net) for both amounts.</div>
           <div class="error-message" aria-live="polite"></div>
         </div>
 
         <div class="input-group">
           <label for="current-salary">Your Current Salary (LKR)</label>
-          <input type="number" id="current-salary" placeholder="e.g., 150000 (gross or net?)" min="0" value="150000" />
+          <input type="number" id="current-salary" placeholder="e.g., 150000" min="0" value="150000" />
           <div class="error-message" aria-live="polite"></div>
         </div>
 
