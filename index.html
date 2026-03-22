@@ -1,249 +1,90 @@
 <!DOCTYPE html>
-<html lang="en" data-theme="light">
+<html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Sri Lanka Inflation & Real Wage Calculator</title>
-  <meta name="description" content="Interactive tool to visualize Sri Lanka's CCPI/NCPI trends and calculate real purchasing power and savings." />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <title>Salary & Inflation Tracker | Economic Dashboard</title>
   <link rel="stylesheet" href="style.css" />
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-annotation@2.0.1/dist/chartjs-plugin-annotation.min.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/chartjs-adapter-date-fns/dist/chartjs-adapter-date-fns.bundle.min.js"></script>
 </head>
 <body>
-  <!-- Header -->
+  
   <header class="app-header">
-    <div class="brand">
-      <h1>Inflation & Real Wage Calculator</h1>
-      <p>Understand your purchasing power against Sri Lanka's inflation.</p>
-    </div>
-
-    <!-- Theme toggle - Moved to more prominent position -->
-    <div class="theme-toggle-container">
-      <span class="theme-label">Theme:</span>
-      <div class="theme-toggle">
-        <input type="checkbox" id="theme-switch" aria-label="Toggle dark mode" />
-        <label for="theme-switch" class="toggle" role="switch" aria-live="polite" aria-checked="false">
-          <span class="toggle-icon" aria-hidden="true">
-            <svg class="icon-sun" viewBox="0 0 24 24" aria-hidden="true"><path d="M6.76 4.84l-1.8-1.79-1.41 1.41 1.79 1.8 1.42-1.42zm10.48 14.32l1.79 1.8 1.41-1.41-1.8-1.79-1.4 1.4zM12 4V1h-0v3h0zm0 19v-3h0v3h0zM4 12H1v0h3v0zm19 0h-3v0h3v0zM6.76 19.16l-1.79 1.8 1.41 1.41 1.8-1.79-1.42-1.42zM19.16 6.76l1.8-1.79-1.41-1.41-1.8 1.79 1.41 1.41zM12 7a5 5 0 100 10 5 5 0 000-10z"/></svg>
-            <svg class="icon-moon" viewBox="0 0 24 24" aria-hidden="true"><path d="M21 12.79A9 9 0 1111.21 3a7 7 0 109.79 9.79z"/></svg>
-          </span>
-          <span class="toggle-knob" aria-hidden="true"></span>
-          <span class="toggle-labels" aria-hidden="true">
-            <span>Light</span><span>Dark</span>
-          </span>
-        </label>
+    <div class="header-container">
+      <div class="brand">
+        <h1 class="main-title">Salary & Inflation Tracker</h1>
+        <p class="subtitle">Comprehensive CCPI & NCPI analysis against real wage purchasing power.</p>
       </div>
     </div>
   </header>
 
-  <!-- Main -->
-  <main class="container">
-    <!-- Left panel: inputs + insights -->
-    <section class="panel">
-      <div class="panel-header">
-        <h2>Enter Your Details</h2>
-      </div>
-
-      <div class="input-card" role="form" aria-labelledby="form-title">
-        <div class="input-group">
-          <label for="jan-salary">Your Salary in Jan 2022 (LKR)</label>
-          <input type="number" id="jan-salary" placeholder="e.g., 100000" min="0" value="100000" />
-          <div class="hint" id="hint-jan-salary">Tip: Use the same basis (gross or net) for both amounts.</div>
-          <div class="error-message" aria-live="polite"></div>
-        </div>
-
-        <div class="input-group">
-          <label for="current-salary">Your Current Salary (LKR)</label>
-          <input type="number" id="current-salary" placeholder="e.g., 150000" min="0" value="150000" />
-          <div class="error-message" aria-live="polite"></div>
-        </div>
-
-        <div class="input-group">
-          <label for="savings-percentage">Monthly Savings Percentage (%)</label>
-          <div class="input-with-slider">
-            <input type="range" id="savings-slider" min="0" max="100" value="20" step="1" aria-labelledby="savings-percentage-label" />
-            <input type="number" id="savings-percentage" placeholder="e.g., 20" min="0" max="100" value="20" />
+  <main class="dashboard-container">
+    
+    <div class="top-grid">
+      
+      <section class="card input-section">
+        <h2 class="section-title">Financial Parameters</h2>
+        <p class="section-desc">Baseline calculations are mapped from January 2022 indices.</p>
+        
+        <div class="form-grid">
+          <div class="form-group">
+            <label for="jan2022_salary">Jan 2022 Salary (LKR)</label>
+            <input type="number" id="jan2022_salary" value="50000" />
           </div>
-          <div class="error-message" aria-live="polite"></div>
-        </div>
-
-        <div class="input-group">
-          <label for="expected-return">Expected Annual Return on Savings (%)</label>
-          <div class="input-with-slider">
-            <input type="range" id="return-slider" min="0" max="30" value="8" step="0.5" aria-labelledby="expected-return-label" />
-            <input type="number" id="expected-return" placeholder="e.g., 8" min="0" value="8" step="0.5" />
+          
+          <div class="form-group">
+            <label for="current_salary">Current Salary (LKR)</label>
+            <input type="number" id="current_salary" value="104145" />
           </div>
-          <div class="error-message" aria-live="polite"></div>
+          
+          <div class="form-group">
+            <label for="savings_percent">Monthly Savings Allocation (%)</label>
+            <input type="number" id="savings_percent" value="20" max="100" />
+          </div>
+          
+          <div class="form-group">
+            <label for="expected_return">Expected Annual Return (%)</label>
+            <input type="number" id="expected_return" value="10" />
+          </div>
         </div>
+        
+        <button id="calculate-btn" class="btn-primary">Calculate Purchasing Power</button>
+      </section>
 
-        <div class="button-group">
-          <button id="calculate-btn" class="btn-calculate" aria-label="Analyze My Financials">
-            <span class="btn-text">Analyze My Financials</span>
-            <span class="spinner" aria-hidden="true"></span>
-          </button>
-          <button id="reset-btn" class="btn-reset" aria-label="Reset to defaults">Reset</button>
-        </div>
-      </div>
-
-      <div id="results-summary" class="results-summary-card" aria-live="polite"></div>
-
-      <div class="summary-cards" role="region" aria-label="Key metrics">
-        <div class="summary-card">
-          <h3>
-            CCPI Inflation (YoY)
-            <span class="info-icon" role="img" aria-label="Colombo Consumer Price Index. Measures inflation for the Colombo urban area." tabindex="0">i</span>
-          </h3>
-          <div id="ccpi-value" class="value">--</div>
-          <div class="change-container">
-            <div id="ccpi-change" class="change">--</div>
-            <div class="date-label" id="ccpi-date">--</div>
+      <section class="card analysis-section">
+        <h2 class="section-title">Purchasing Power Analysis</h2>
+        
+        <div class="kpi-container">
+          <div class="kpi-box">
+            <span class="kpi-label">Colombo Impact (CCPI)</span>
+            <span class="kpi-value" id="wage_ccpi">--</span>
+          </div>
+          <div class="kpi-box">
+            <span class="kpi-label">National Impact (NCPI)</span>
+            <span class="kpi-value" id="wage_ncpi">--</span>
           </div>
         </div>
 
-        <div class="summary-card">
-          <h3>
-            NCPI Inflation (YoY)
-            <span class="info-icon" role="img" aria-label="National Consumer Price Index. Measures inflation nationally." tabindex="0">i</span>
-          </h3>
-          <div id="ncpi-value" class="value">--</div>
-          <div class="change-container">
-            <div id="ncpi-change" class="change">--</div>
-            <div class="date-label" id="ncpi-date">--</div>
-          </div>
+        <div class="analysis-text-block" id="analysis-summary">
+          Awaiting calculation parameters to generate AI economic impact summary.
         </div>
+      </section>
 
-        <div class="summary-card">
-          <h3>
-            Real Wage Change
-            <span class="info-icon" role="img" aria-label="Change in your salary's purchasing power vs. Jan 2022, after inflation." tabindex="0">i</span>
-          </h3>
-          <div id="wage-value" class="value">--</div>
-          <div class="change-container">
-            <div id="wage-change" class="change">--</div>
-            <div class="date-label">Since Jan 2022</div>
-          </div>
-        </div>
-      </div>
+    </div>
 
-      <!-- Tabs -->
-      <div class="tab-container">
-        <div class="tabs" role="tablist">
-          <button class="tab active" data-tab="inflation" role="tab" aria-controls="inflation-tab" aria-selected="true">Inflation Insights</button>
-          <button class="tab" data-tab="breakdown" role="tab" aria-controls="breakdown-tab" aria-selected="false">Category Breakdown</button>
-          <button class="tab" data-tab="savings" role="tab" aria-controls="savings-tab" aria-selected="false">Savings Projection</button>
-        </div>
-
-        <div class="tab-content active" id="inflation-tab" role="tabpanel">
-          <p>Key insights based on the Colombo Consumer Price Index (CCPI):</p>
-          <ul class="tab-list">
-            <li>Peak inflation reached <strong id="peak-inflation">--</strong> in <strong id="peak-inflation-date">--</strong></li>
-            <li>The latest inflation for <strong id="latest-month">--</strong> is <strong id="latest-inflation">--</strong></li>
-            <li id="wage-trend">--</li>
-          </ul>
-        </div>
-
-        <div class="tab-content" id="breakdown-tab" role="tabpanel">
-          <p>Major contributors to inflation in <strong id="breakdown-date">--</strong> (YoY % Change):</p>
-          <ul class="tab-list">
-            <li>Food &amp; Non-Alcoholic Beverages: <strong class="negative">-5.2%</strong></li>
-            <li>Housing, Water, Electricity, Gas: <strong class="positive">+8.1%</strong></li>
-            <li>Transport: <strong class="negative">-2.0%</strong></li>
-            <li>Health: <strong class="positive">+4.5%</strong></li>
-            <li>Education Services: <strong class="positive">+6.3%</strong></li>
-          </ul>
-          <p class="disclaimer-note">Note: Category data is illustrative (not linked to the main chart).</p>
-        </div>
-
-        <div class="tab-content" id="savings-tab" role="tabpanel">
-          <div class="savings-plan">
-            <h3>Projected Savings Growth</h3>
-            <p>Based on your current salary and savings rate.</p>
-            <div class="savings-cards">
-              <div class="savings-card">
-                <h4>1 Year</h4>
-                <div class="savings-value" id="savings-1y">LKR 0</div>
-                <div class="savings-detail" id="saved-1y">Principal: LKR 0</div>
-                <div class="savings-detail" id="returns-1y">Returns: LKR 0</div>
-              </div>
-              <div class="savings-card">
-                <h4>5 Years</h4>
-                <div class="savings-value" id="savings-5y">LKR 0</div>
-                <div class="savings-detail" id="saved-5y">Principal: LKR 0</div>
-                <div class="savings-detail" id="returns-5y">Returns: LKR 0</div>
-              </div>
-              <div class="savings-card">
-                <h4>10 Years</h4>
-                <div class="savings-value" id="savings-10y">LKR 0</div>
-                <div class="savings-detail" id="saved-10y">Principal: LKR 0</div>
-                <div class="savings-detail" id="returns-10y">Returns: LKR 0</div>
-              </div>
-            </div>
-            <div class="mini-chart">
-              <canvas id="savingsChart"></canvas>
-            </div>
-            <p class="disclaimer-note">Projections assume consistent monthly savings and annual compounding. Not financial advice.</p>
-          </div>
-        </div>
-      </div>
-
-      <div class="source-note">
-        <p>Source: Central Bank of Sri Lanka (CBSL), Department of Census &amp; Statistics (DCS). Updated: September 2025</p>
+    <section class="card chart-section">
+      <h2 class="section-title">Historical Trend Analysis (2022 - 2026)</h2>
+      <div class="chart-wrapper">
+        <canvas id="mainChart"></canvas>
       </div>
     </section>
 
-    <!-- Right panel: main chart -->
-    <section class="panel">
-      <div class="chart-header">
-        <h2>Inflation Trends & Purchasing Power</h2>
-        <div class="chart-controls">
-          <button id="zoom-in" class="chart-control-btn" aria-label="Zoom in">+</button>
-          <button id="zoom-out" class="chart-control-btn" aria-label="Zoom out">-</button>
-          <button id="reset-zoom" class="chart-control-btn" aria-label="Reset zoom">↺</button>
-          <button id="download-chart" class="chart-control-btn" aria-label="Download chart">↓</button>
-        </div>
-      </div>
-      <div class="chart-container">
-        <canvas id="inflationChart"></canvas>
-      </div>
-      <div class="chart-legend">
-        <div class="legend-item">
-          <span class="legend-color" style="background-color: var(--blue)"></span>
-          <span>CCPI Inflation (YoY %)</span>
-        </div>
-        <div class="legend-item">
-          <span class="legend-color" style="background-color: var(--red)"></span>
-          <span>NCPI Inflation (YoY %)</span>
-        </div>
-        <div class="legend-item">
-          <span class="legend-color" style="background-color: var(--green); border: 2px dashed var(--green)"></span>
-          <span>Purchasing Power (LKR)</span>
-        </div>
-      </div>
-    </section>
   </main>
 
-  <footer>
+  <footer class="app-footer">
     <div class="footer-content">
-      <div class="footer-section">
-        <h3>Inflation &amp; Real Wage Calculator</h3>
-        <p>Visualizing economic trends in Sri Lanka</p>
-      </div>
-      <div class="footer-section">
-        <h3>Data Sources</h3>
-        <p>Central Bank of Sri Lanka<br />Department of Census &amp; Statistics</p>
-      </div>
-      <div class="footer-section">
-        <h3>Connect</h3>
-        <div class="footer-links">
-          <a href="#" aria-label="Twitter">Twitter</a>
-          <a href="#" aria-label="LinkedIn">LinkedIn</a>
-          <a href="#" aria-label="GitHub">GitHub</a>
-        </div>
-      </div>
-      <div class="copyright">
-        <p>&copy; 2025 Inflation Data Visualization. All rights reserved.</p>
-      </div>
+      <p>&copy; 2026 Chatura Dissanayake. All rights reserved.</p>
+      <p class="source-text">Data sourced from the Department of Census and Statistics, Sri Lanka.</p>
     </div>
   </footer>
 
